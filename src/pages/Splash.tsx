@@ -30,7 +30,7 @@ export const Splash = () => {
 
   return (
     <div
-      className="min-h-screen relative overflow-hidden flex flex-col items-center justify-center p-6"
+      className="min-h-screen relative overflow-hidden flex flex-col items-center justify-center p-4 md:p-6"
       style={{
         backgroundImage: 'url(/background.png)',
         backgroundSize: 'cover',
@@ -38,42 +38,43 @@ export const Splash = () => {
         backgroundRepeat: 'no-repeat'
       }}
     >
-      <div className="max-w-sm md:max-w-md lg:max-w-lg w-full relative z-10">
+      <div className="max-w-xs md:max-w-md lg:max-w-lg w-full relative z-10">
         {/* Logo Image */}
-        <div className="flex justify-center mb-2">
+        <div className="flex justify-center">
           <img
             src="/Mobble.png"
             alt="Mobble Logo"
-            className="h-16 md:h-20 lg:h-24 w-auto object-contain"
+            className="h-48 md:h-72 lg:h-96 w-auto object-contain"
           />
         </div>
 
         {/* Tagline */}
         <p
-          className="text-center text-base md:text-lg mb-2"
-          style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 600, color: '#2C3E50' }}
+          className="text-center text-sm md:text-base lg:text-lg px-4 -mt-6 md:-mt-10 lg:-mt-14 mb-6 md:mb-8"
+          style={{
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: 500,
+            background: 'linear-gradient(135deg, #4ECDC4 0%, #44A8B3 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text'
+          }}
         >
-          Welcome to Mobble!
-        </p>
-        <p
-          className="text-center text-xs md:text-sm mb-6 px-4"
-          style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, color: '#7F8C8D' }}
-        >
-          Gentle movement, daily.
+          A minimal fitness awareness app — no shame, no streaks, just honest self-awareness.
         </p>
 
-        {/* Mascot peeking over card - larger and overlapping */}
-        <div className="flex justify-center relative z-20 md:mb-[-70px] lg:mb-[-80px]" style={{ marginBottom: '-50px' }}>
+        {/* Mascot peeking over card */}
+        <div className="flex justify-center relative z-20 mb-[-24px] md:mb-[-32px] lg:mb-[-28px]">
           <img
             src="/splashmockup.png"
             alt="Mobble Mascot"
-            className="w-56 md:w-72 lg:w-80 h-auto object-contain"
+            className="w-44 md:w-56 lg:w-72 h-auto object-contain"
           />
         </div>
 
         {/* Login Card */}
         <div
-          className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-xl p-6 md:p-8 relative pt-[60px] md:pt-[80px] lg:pt-[90px]"
+          className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-xl p-4 md:p-5 relative pt-[10px] md:pt-[14px] lg:pt-[18px]"
           style={{ boxShadow: '0 10px 40px rgba(0,0,0,0.1)' }}
         >
           {!showLogin ? (
@@ -270,16 +271,10 @@ export const Splash = () => {
             </>
           )}
 
-          {/* Footer Links */}
-          <div className="mt-6 pt-4 border-t border-gray-100 text-center">
-            <span
-              className="text-xs md:text-sm text-gray-400"
-              style={{ fontFamily: "'Inter', sans-serif" }}
-            >
-              Privacy Policy · Terms of Service
-            </span>
-          </div>
         </div>
+
+        {/* Bottom spacer */}
+        <div className="h-8 md:h-12 lg:h-16"></div>
       </div>
     </div>
   );
