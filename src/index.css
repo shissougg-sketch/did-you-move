@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @layer base {
   body {
@@ -27,4 +25,14 @@
   .btn-secondary {
     @apply bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 focus:ring-2 focus:ring-slate-300 focus:ring-offset-2;
   }
+}
+
+/* Custom color definitions for Tailwind v4 */
+@theme {
+  --color-moved-yes: #86EFAC;
+  --color-moved-kind-of: #FDE047;
+  --color-moved-no: #D1D5DB;
+  --color-feeling-better: #86EFAC;
+  --color-feeling-same: #A5B4FC;
+  --color-feeling-worse: #D1D5DB;
 }
