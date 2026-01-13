@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  /* Calm, generous spacing throughout */
+  .page-container {
+    @apply max-w-2xl mx-auto px-6 py-8;
+  }
+
+  /* Gentle button styles */
+  .btn {
+    @apply px-6 py-3 rounded-lg font-medium transition-all duration-200;
+  }
+
+  .btn-primary {
+    @apply bg-slate-800 text-white hover:bg-slate-700 focus:ring-2 focus:ring-slate-400 focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 focus:ring-2 focus:ring-slate-300 focus:ring-offset-2;
+  }
+}
