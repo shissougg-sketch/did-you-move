@@ -9,10 +9,10 @@ interface GenerateResponseRequest {
   tone: Tone;
 }
 
-interface GenerateResponseResult {
-  response: string;
-  timestamp: string;
-}
+// interface GenerateResponseResult {
+//   response: string;
+//   timestamp: string;
+// }
 
 export const generateAIResponse = async (
   data: GenerateResponseRequest
