@@ -1,6 +1,8 @@
-# Did You Move?
+# Mobble
 
 A minimal fitness awareness app - no shame, no streaks, just honest self-awareness.
+
+**Live at**: [gomobble.com](https://gomobble.com)
 
 ## Philosophy
 
@@ -57,8 +59,8 @@ For people who:
 
 ```bash
 # Clone the repository
-git clone https://github.com/shissougg-sketch/did-you-move.git
-cd did-you-move
+git clone https://github.com/shissougg-sketch/mobble.git
+cd mobble
 
 # Install dependencies
 npm install
@@ -76,7 +78,7 @@ npm run preview
 ### Project Structure
 
 ```
-did-you-move/
+mobble/
 ├── src/
 │   ├── components/     # Reusable UI components
 │   ├── pages/          # Page components (Home, History, Trends, Settings)
@@ -98,13 +100,19 @@ did-you-move/
 - AI-generated contextual responses (placeholder)
 - History and trends pages
 - Settings with tone selection
+- Point system with rewards
+- Cosmetics store for mascot customization
 - PWA-ready (can install on phone)
 
-### Phase 2 (Future)
-- Vercel serverless functions for AI responses
+### Phase 2 (Deployment & Backend)
+- Deploy to Cloudflare Pages (gomobble.com)
+- Cloudflare Workers for AI responses
+- Claude API integration via Anthropic SDK
+
+### Phase 3 (Future)
 - iOS companion app
 - HealthKit auto-sync (calories → movement detection)
-- Backend database for multi-device sync
+- Backend database (Cloudflare D1) for multi-device sync
 - User accounts
 
 ## License

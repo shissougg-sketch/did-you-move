@@ -37,7 +37,7 @@ export const Home = () => {
       <nav className="bg-white border-b border-slate-200">
         <div className="page-container">
           <div className="flex items-center justify-between py-4">
-            <h1 className="text-2xl font-bold text-slate-800">Did You Move?</h1>
+            <h1 className="text-2xl font-bold text-slate-800">Mobble</h1>
             <div className="flex items-center space-x-3">
               {/* Points Balance */}
               <Link

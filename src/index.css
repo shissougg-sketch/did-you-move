@@ -79,4 +79,38 @@
       opacity: 1;
     }
   }
+
+  /* Exit animations */
+  .animate-out {
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+  }
+
+  .fade-out {
+    animation-name: fadeOut;
+  }
+
+  .slide-out-to-top {
+    animation-name: slideOutToTop;
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes slideOutToTop {
+    from {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateY(-1rem);
+      opacity: 0;
+    }
+  }
 }

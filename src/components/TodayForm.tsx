@@ -9,6 +9,8 @@ import { generateAIResponse } from '../utils/aiClient';
 import { calculatePointsForEntry } from '../utils/pointsCalculator';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
+type QuestionStep = 'q1' | 'q2' | 'q3' | 'complete';
+
 export const TodayForm = () => {
   const { settings } = useSettingsStore();
   const addPoints = useSettingsStore((state) => state.addPoints);
@@ -23,6 +25,33 @@ export const TodayForm = () => {
   const [aiResponse, setAiResponse] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [pointsEarned, setPointsEarned] = useState<number>(0);
+  const [activeQuestion, setActiveQuestion] = useState<QuestionStep>('q1');
+  const [isExiting, setIsExiting] = useState(false);
+
+  // Helper function to transition between questions
+  const transitionToNextQuestion = (nextQuestion: QuestionStep) => {
+    setIsExiting(true);
+    setTimeout(() => {
+      setActiveQuestion(nextQuestion);
+      setIsExiting(false);
+    }, 300); // Match animation duration
+  };
+
+  // Question answer handlers with transitions
+  const handleDidMoveAnswer = (answer: DidMove) => {
+    setDidMove(answer);
+    transitionToNextQuestion('q2');
+  };
+
+  const handleIntensityAnswer = (answer: Intensity) => {
+    setIntensity(answer);
+    transitionToNextQuestion('q3');
+  };
+
+  const handleFeelingAnswer = (answer: Feeling) => {
+    setFeeling(answer);
+    transitionToNextQuestion('complete');
+  };
 
   const handleSubmit = async () => {
     if (!didMove || !intensity || !feeling) return;
@@ -61,11 +90,9 @@ export const TodayForm = () => {
   };
 
   // Auto-submit when all required questions are answered
-  if (didMove && intensity && feeling && !aiResponse && !isLoading) {
+  if (activeQuestion === 'complete' && didMove && intensity && feeling && !aiResponse && !isLoading) {
     handleSubmit();
   }
-
-  const isComplete = didMove && intensity && feeling;
 
   return (
     <div className="space-y-8">
@@ -74,85 +101,99 @@ export const TodayForm = () => {
       </div>
 
       {/* Question 1: Did you move? */}
-      <div className="space-y-4">
-        <h2 className="text-2xl font-semibold text-slate-800">Did you move today?</h2>
-        <div className="grid grid-cols-1 gap-3">
-          <QuestionButton
-            label="Yes"
-            selected={didMove === 'yes'}
-            onClick={() => setDidMove('yes')}
-            variant="yes"
-          />
-          <QuestionButton
-            label="Kind of"
-            selected={didMove === 'kind-of'}
-            onClick={() => setDidMove('kind-of')}
-            variant="kind-of"
-          />
-          <QuestionButton
-            label="No"
-            selected={didMove === 'no'}
-            onClick={() => setDidMove('no')}
-            variant="no"
-          />
+      {activeQuestion === 'q1' && (
+        <div
+          className={`space-y-4 ${
+            isExiting ? 'animate-out fade-out slide-out-to-top' : 'animate-in fade-in slide-in-from-bottom'
+          } duration-300`}
+        >
+          <h2 className="text-2xl font-semibold text-slate-800">Did you move today?</h2>
+          <div className="grid grid-cols-1 gap-3">
+            <QuestionButton
+              label="Yes"
+              selected={didMove === 'yes'}
+              onClick={() => handleDidMoveAnswer('yes')}
+              variant="yes"
+            />
+            <QuestionButton
+              label="Kind of"
+              selected={didMove === 'kind-of'}
+              onClick={() => handleDidMoveAnswer('kind-of')}
+              variant="kind-of"
+            />
+            <QuestionButton
+              label="No"
+              selected={didMove === 'no'}
+              onClick={() => handleDidMoveAnswer('no')}
+              variant="no"
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Question 2: How hard was it? */}
-      {didMove && (
-        <div key="question-2" className="space-y-4 animate-in fade-in slide-in-from-bottom duration-300">
+      {activeQuestion === 'q2' && (
+        <div
+          className={`space-y-4 ${
+            isExiting ? 'animate-out fade-out slide-out-to-top' : 'animate-in fade-in slide-in-from-bottom'
+          } duration-300`}
+        >
           <h2 className="text-2xl font-semibold text-slate-800">How hard was it?</h2>
           <div className="grid grid-cols-2 gap-3">
             <QuestionButton
               label="Easy"
               selected={intensity === 'easy'}
-              onClick={() => setIntensity('easy')}
+              onClick={() => handleIntensityAnswer('easy')}
             />
             <QuestionButton
               label="Moderate"
               selected={intensity === 'moderate'}
-              onClick={() => setIntensity('moderate')}
+              onClick={() => handleIntensityAnswer('moderate')}
             />
             <QuestionButton
               label="Hard"
               selected={intensity === 'hard'}
-              onClick={() => setIntensity('hard')}
+              onClick={() => handleIntensityAnswer('hard')}
             />
             <QuestionButton
               label="Exhausting"
               selected={intensity === 'exhausting'}
-              onClick={() => setIntensity('exhausting')}
+              onClick={() => handleIntensityAnswer('exhausting')}
             />
           </div>
         </div>
       )}
 
       {/* Question 3: How do you feel now? */}
-      {didMove && intensity && (
-        <div key="question-3" className="space-y-4 animate-in fade-in slide-in-from-bottom duration-300">
+      {activeQuestion === 'q3' && (
+        <div
+          className={`space-y-4 ${
+            isExiting ? 'animate-out fade-out slide-out-to-top' : 'animate-in fade-in slide-in-from-bottom'
+          } duration-300`}
+        >
           <h2 className="text-2xl font-semibold text-slate-800">How do you feel now?</h2>
           <div className="grid grid-cols-1 gap-3">
             <QuestionButton
               label="Better"
               selected={feeling === 'better'}
-              onClick={() => setFeeling('better')}
+              onClick={() => handleFeelingAnswer('better')}
             />
             <QuestionButton
               label="Same"
               selected={feeling === 'same'}
-              onClick={() => setFeeling('same')}
+              onClick={() => handleFeelingAnswer('same')}
             />
             <QuestionButton
               label="Worse"
               selected={feeling === 'worse'}
-              onClick={() => setFeeling('worse')}
+              onClick={() => handleFeelingAnswer('worse')}
             />
           </div>
         </div>
       )}
 
       {/* Optional note */}
-      {isComplete && !aiResponse && (
+      {activeQuestion === 'complete' && !aiResponse && (
         <div className="space-y-3 animate-in fade-in duration-300">
           <button
             onClick={() => setShowNote(!showNote)}
