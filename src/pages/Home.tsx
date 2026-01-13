@@ -3,16 +3,24 @@ import { TodayForm } from '../components/TodayForm';
 import { CompletedState } from '../components/CompletedState';
 import { useEntryStore } from '../stores/entryStore';
 import { useSettingsStore } from '../stores/settingsStore';
-import { Link } from 'react-router-dom';
-import { Calendar, TrendingUp, Settings, Coins } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { Link, useNavigate } from 'react-router-dom';
+import { Calendar, TrendingUp, Settings, Coins, LogOut } from 'lucide-react';
 
 export const Home = () => {
   const { getTodayEntry, loadEntries, deleteEntry } = useEntryStore();
   const getAvailablePoints = useSettingsStore((state) => state.getAvailablePoints);
+  const { signOut } = useAuth();
+  const navigate = useNavigate();
   const [todayEntry, setTodayEntry] = useState(getTodayEntry());
   const [isEditing, setIsEditing] = useState(false);
 
   const availablePoints = getAvailablePoints();
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate('/splash');
+  };
 
   useEffect(() => {
     loadEntries();
@@ -70,6 +78,13 @@ export const Home = () => {
               >
                 <Settings className="w-5 h-5" />
               </Link>
+              <button
+                onClick={handleLogout}
+                className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+                title="Log out"
+              >
+                <LogOut className="w-5 h-5" />
+              </button>
             </div>
           </div>
         </div>
