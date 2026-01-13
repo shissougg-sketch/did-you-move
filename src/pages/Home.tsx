@@ -2,13 +2,17 @@ import { useEffect, useState } from 'react';
 import { TodayForm } from '../components/TodayForm';
 import { CompletedState } from '../components/CompletedState';
 import { useEntryStore } from '../stores/entryStore';
+import { useSettingsStore } from '../stores/settingsStore';
 import { Link } from 'react-router-dom';
-import { Calendar, TrendingUp, Settings } from 'lucide-react';
+import { Calendar, TrendingUp, Settings, Coins } from 'lucide-react';
 
 export const Home = () => {
   const { getTodayEntry, loadEntries, deleteEntry } = useEntryStore();
+  const getAvailablePoints = useSettingsStore((state) => state.getAvailablePoints);
   const [todayEntry, setTodayEntry] = useState(getTodayEntry());
   const [isEditing, setIsEditing] = useState(false);
+
+  const availablePoints = getAvailablePoints();
 
   useEffect(() => {
     loadEntries();
@@ -34,7 +38,17 @@ export const Home = () => {
         <div className="page-container">
           <div className="flex items-center justify-between py-4">
             <h1 className="text-2xl font-bold text-slate-800">Did You Move?</h1>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
+              {/* Points Balance */}
+              <Link
+                to="/store"
+                className="flex items-center space-x-2 px-3 py-2 bg-yellow-100 border-2 border-yellow-300 rounded-lg hover:bg-yellow-200 transition-colors"
+                title="Store"
+              >
+                <Coins className="w-5 h-5 text-yellow-700" />
+                <span className="font-semibold text-yellow-800">{availablePoints}</span>
+              </Link>
+
               <Link
                 to="/history"
                 className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"

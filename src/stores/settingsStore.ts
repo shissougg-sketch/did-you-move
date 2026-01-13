@@ -8,6 +8,13 @@ interface SettingsStore {
   updateTone: (tone: Tone) => void;
   toggleTrends: () => void;
   updateSettings: (updates: Partial<UserSettings>) => void;
+  // Points and cosmetics methods
+  addPoints: (amount: number) => void;
+  spendPoints: (amount: number) => boolean;
+  getAvailablePoints: () => number;
+  buyCosmetic: (cosmeticId: string, price: number) => boolean;
+  equipCosmetic: (cosmeticId: string | null) => void;
+  ownsCosmetic: (cosmeticId: string) => boolean;
 }
 
 export const useSettingsStore = create<SettingsStore>((set, get) => ({
@@ -34,5 +41,55 @@ export const useSettingsStore = create<SettingsStore>((set, get) => ({
     const settings = { ...get().settings, ...updates };
     saveSettings(settings);
     set({ settings });
+  },
+
+  // Points and cosmetics methods
+  addPoints: (amount) => {
+    const settings = {
+      ...get().settings,
+      totalPoints: get().settings.totalPoints + amount,
+    };
+    saveSettings(settings);
+    set({ settings });
+  },
+
+  spendPoints: (amount) => {
+    const available = get().getAvailablePoints();
+    if (available < amount) return false;
+
+    const settings = {
+      ...get().settings,
+      pointsSpent: get().settings.pointsSpent + amount,
+    };
+    saveSettings(settings);
+    set({ settings });
+    return true;
+  },
+
+  getAvailablePoints: () => {
+    const { totalPoints, pointsSpent } = get().settings;
+    return totalPoints - pointsSpent;
+  },
+
+  buyCosmetic: (cosmeticId, price) => {
+    if (!get().spendPoints(price)) return false;
+
+    const settings = {
+      ...get().settings,
+      cosmeticsOwned: [...get().settings.cosmeticsOwned, cosmeticId],
+    };
+    saveSettings(settings);
+    set({ settings });
+    return true;
+  },
+
+  equipCosmetic: (cosmeticId) => {
+    const settings = { ...get().settings, equippedCosmetic: cosmeticId };
+    saveSettings(settings);
+    set({ settings });
+  },
+
+  ownsCosmetic: (cosmeticId) => {
+    return get().settings.cosmeticsOwned.includes(cosmeticId);
   },
 }));

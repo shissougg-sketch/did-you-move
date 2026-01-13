@@ -1,0 +1,68 @@
+import type { CosmeticItem } from '../types/cosmetics';
+
+export const COSMETIC_ITEMS: CosmeticItem[] = [
+  {
+    id: 'wizard-hat',
+    name: 'Wizard Hat',
+    description: 'Channel your inner magic',
+    price: 50,
+    category: 'hats',
+    imageUrl: '/cosmetics/wizard-hat.png',
+  },
+  {
+    id: 'sunglasses',
+    name: 'Cool Sunglasses',
+    description: 'Looking good after that workout',
+    price: 30,
+    category: 'accessories',
+    imageUrl: '/cosmetics/sunglasses.png',
+  },
+  {
+    id: 'sweatband',
+    name: 'Retro Sweatband',
+    description: 'For the motivated ones',
+    price: 25,
+    category: 'accessories',
+    imageUrl: '/cosmetics/sweatband.png',
+  },
+  {
+    id: 'crown',
+    name: 'Golden Crown',
+    description: 'Royalty of consistency',
+    price: 100,
+    category: 'hats',
+    imageUrl: '/cosmetics/crown.png',
+  },
+  {
+    id: 'cape',
+    name: 'Hero Cape',
+    description: 'Not all heroes log every day',
+    price: 75,
+    category: 'clothing',
+    imageUrl: '/cosmetics/cape.png',
+  },
+  {
+    id: 'party-hat',
+    name: 'Party Hat',
+    description: 'Celebrate the small wins',
+    price: 40,
+    category: 'hats',
+    imageUrl: '/cosmetics/party-hat.png',
+  },
+  {
+    id: 'sparkles',
+    name: 'Sparkle Effect',
+    description: 'You shine when you move',
+    price: 60,
+    category: 'effects',
+    imageUrl: '/cosmetics/sparkles.png',
+  },
+  {
+    id: 'headphones',
+    name: 'Workout Headphones',
+    description: 'Jamming to the beat',
+    price: 35,
+    category: 'accessories',
+    imageUrl: '/cosmetics/headphones.png',
+  },
+];

@@ -3,6 +3,7 @@ import { Home } from './pages/Home';
 import { History } from './pages/History';
 import { Trends } from './pages/Trends';
 import { Settings } from './pages/Settings';
+import { Store } from './pages/Store';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/history" element={<History />} />
         <Route path="/trends" element={<Trends />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/store" element={<Store />} />
       </Routes>
     </BrowserRouter>
   );

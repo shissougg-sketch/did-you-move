@@ -6,10 +6,12 @@ import { useSettingsStore } from '../stores/settingsStore';
 import { useEntryStore } from '../stores/entryStore';
 import { getToneMessage } from '../utils/toneMessages';
 import { generateAIResponse } from '../utils/aiClient';
+import { calculatePointsForEntry } from '../utils/pointsCalculator';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 export const TodayForm = () => {
   const { settings } = useSettingsStore();
+  const addPoints = useSettingsStore((state) => state.addPoints);
   const createEntry = useEntryStore((state) => state.createEntry);
   const addAIResponse = useEntryStore((state) => state.addAIResponse);
 
@@ -20,6 +22,7 @@ export const TodayForm = () => {
   const [showNote, setShowNote] = useState(false);
   const [aiResponse, setAiResponse] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [pointsEarned, setPointsEarned] = useState<number>(0);
 
   const handleSubmit = async () => {
     if (!didMove || !intensity || !feeling) return;
@@ -33,6 +36,11 @@ export const TodayForm = () => {
       feeling,
       note: note.trim() || null,
     });
+
+    // Calculate and award points
+    const earned = calculatePointsForEntry(note.trim() || null);
+    addPoints(earned);
+    setPointsEarned(earned);
 
     // Generate AI response
     try {
@@ -92,7 +100,7 @@ export const TodayForm = () => {
 
       {/* Question 2: How hard was it? */}
       {didMove && (
-        <div className="space-y-4 animate-in fade-in duration-300">
+        <div key="question-2" className="space-y-4 animate-in fade-in slide-in-from-bottom duration-300">
           <h2 className="text-2xl font-semibold text-slate-800">How hard was it?</h2>
           <div className="grid grid-cols-2 gap-3">
             <QuestionButton
@@ -121,7 +129,7 @@ export const TodayForm = () => {
 
       {/* Question 3: How do you feel now? */}
       {didMove && intensity && (
-        <div className="space-y-4 animate-in fade-in duration-300">
+        <div key="question-3" className="space-y-4 animate-in fade-in slide-in-from-bottom duration-300">
           <h2 className="text-2xl font-semibold text-slate-800">How do you feel now?</h2>
           <div className="grid grid-cols-1 gap-3">
             <QuestionButton
@@ -172,6 +180,18 @@ export const TodayForm = () => {
 
       {/* AI Response */}
       <AIResponse response={aiResponse || ''} isLoading={isLoading} />
+
+      {/* Points Earned Badge */}
+      {pointsEarned > 0 && aiResponse && (
+        <div className="mt-4 text-center animate-in fade-in duration-500">
+          <div className="inline-flex items-center space-x-2 bg-green-100 border-2 border-green-300 rounded-full px-6 py-3">
+            <span className="text-2xl">🎉</span>
+            <span className="font-semibold text-green-800">
+              +{pointsEarned} points earned!
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

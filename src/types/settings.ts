@@ -9,6 +9,11 @@ export interface UserSettings {
     yes: number; // default 150
     kindOf: number; // default 50
   };
+  // Points and cosmetics system
+  totalPoints: number;
+  pointsSpent: number;
+  cosmeticsOwned: string[];
+  equippedCosmetic: string | null;
 }
 
 export const DEFAULT_SETTINGS: UserSettings = {
@@ -20,4 +25,8 @@ export const DEFAULT_SETTINGS: UserSettings = {
     yes: 150,
     kindOf: 50,
   },
+  totalPoints: 0,
+  pointsSpent: 0,
+  cosmeticsOwned: [],
+  equippedCosmetic: null,
 };

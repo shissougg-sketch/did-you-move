@@ -1,7 +1,8 @@
-import { CheckCircle2, Edit3 } from 'lucide-react';
+import { CheckCircle2, Edit3, Coins } from 'lucide-react';
 import type { DailyEntry } from '../types/entry';
 import { useSettingsStore } from '../stores/settingsStore';
 import { getCompletionMessage } from '../utils/toneMessages';
+import { calculatePointsForEntry } from '../utils/pointsCalculator';
 
 interface CompletedStateProps {
   entry: DailyEntry;
@@ -18,9 +19,11 @@ export const CompletedState = ({ entry, onEdit }: CompletedStateProps) => {
       case 'kind-of':
         return 'Moved (kind of)';
       case 'no':
-        return 'Didn\'t move';
+        return "Didn't move";
     }
   };
+
+  const pointsEarned = calculatePointsForEntry(entry.note);
 
   return (
     <div className="space-y-6">
@@ -63,6 +66,18 @@ export const CompletedState = ({ entry, onEdit }: CompletedStateProps) => {
             <p className="text-lg text-slate-700 mt-1">{entry.note}</p>
           </div>
         )}
+      </div>
+
+      {/* Points Earned */}
+      <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-4 flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <Coins className="w-6 h-6 text-yellow-600" />
+          <div>
+            <p className="text-sm text-yellow-800 font-medium">Points Earned Today</p>
+            <p className="text-xs text-yellow-600">Keep logging to earn more!</p>
+          </div>
+        </div>
+        <div className="text-2xl font-bold text-yellow-700">+{pointsEarned}</div>
       </div>
 
       {entry.aiResponse && (
