@@ -24,7 +24,7 @@ const WALKTHROUGH_STEPS: WalkthroughStep[] = [
     icon: BarChart2,
     title: 'Track Your Patterns',
     description: 'See how your movement habits look over time. No judgments, just awareness.',
-    emote: 'curious',
+    emote: 'happysmile',
     tabName: 'Insights',
   },
   {
