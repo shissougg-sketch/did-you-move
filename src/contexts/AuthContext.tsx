@@ -6,6 +6,11 @@ import {
   onAuthStateChanged
 } from 'firebase/auth';
 import { auth } from '../lib/firebase';
+import { setCurrentUser, clearCurrentUser } from '../utils/localStorage';
+import { useEntryStore } from '../stores/entryStore';
+import { useSettingsStore } from '../stores/settingsStore';
+import { usePromptStore } from '../stores/promptStore';
+import { useStoryStore } from '../stores/storyStore';
 
 interface AuthContextType {
   user: User | null;
@@ -34,8 +39,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     // Listen for auth state changes
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        // Set current user for localStorage namespacing
+        setCurrentUser(firebaseUser.uid);
+        // Reload all stores with user-specific data
+        useEntryStore.getState().loadEntries();
+        useSettingsStore.getState().loadSettings();
+        usePromptStore.getState().reloadState();
+        useStoryStore.getState().reloadProgress();
+      } else {
+        // Clear current user
+        clearCurrentUser();
+      }
+      setUser(firebaseUser);
       setLoading(false);
     });
 

@@ -39,8 +39,8 @@ export const Splash = () => {
       }}
     >
       <div className="max-w-xs md:max-w-md lg:max-w-lg w-full relative z-10">
-        {/* Logo Image */}
-        <div className="flex justify-center">
+        {/* Logo Image - extends past container edges */}
+        <div className="flex justify-center -mx-8 md:-mx-12 lg:-mx-16">
           <img
             src="/Mobble.png"
             alt="Mobble Logo"
