@@ -1,8 +1,13 @@
-import { CheckCircle2, Edit3, Coins } from 'lucide-react';
+import { useState } from 'react';
+import { Edit3, Send } from 'lucide-react';
 import type { DailyEntry } from '../types/entry';
 import { useSettingsStore } from '../stores/settingsStore';
+import { useEntryStore } from '../stores/entryStore';
 import { getCompletionMessage } from '../utils/toneMessages';
-import { calculatePointsForEntry } from '../utils/pointsCalculator';
+import { getCompletionEmote, getCompletionAnimation } from '../utils/emoteMapper';
+import { MobbleEmote } from './MobbleEmote';
+import { NoteSuggestions } from './NoteSuggestions';
+import { Card } from './ui';
 
 interface CompletedStateProps {
   entry: DailyEntry;
@@ -11,88 +16,169 @@ interface CompletedStateProps {
 
 export const CompletedState = ({ entry, onEdit }: CompletedStateProps) => {
   const { settings } = useSettingsStore();
+  const updateEntry = useEntryStore((state) => state.updateEntry);
+  const addPoints = useSettingsStore((state) => state.addPoints);
+  const [note, setNote] = useState('');
+  const [noteAdded, setNoteAdded] = useState(false);
+
+  const handleAddNote = () => {
+    if (!note.trim()) return;
+
+    updateEntry(entry.id, { note: note.trim() });
+    // Award bonus point for adding a note
+    addPoints(1);
+    setNoteAdded(true);
+  };
 
   const getMoveLabel = () => {
     switch (entry.didMove) {
       case 'yes':
-        return 'Moved';
+        return 'Yes';
       case 'kind-of':
-        return 'Moved (kind of)';
+        return 'Kind of';
       case 'no':
-        return "Didn't move";
+        return 'No';
     }
   };
 
-  const pointsEarned = calculatePointsForEntry(entry.note);
+  const emoteAnimation = getCompletionAnimation(entry);
+
+  // Get display note - either from entry or just added
+  const displayNote = noteAdded ? note : entry.note;
 
   return (
-    <div className="space-y-6">
-      <div className="text-center space-y-4">
-        <CheckCircle2 className="w-16 h-16 text-slate-700 mx-auto" />
-        <h2 className="text-3xl font-semibold text-slate-800">
+    <div className="space-y-4">
+      {/* Mobble celebration */}
+      <div className="text-center space-y-3">
+        <div className="flex justify-center">
+          <MobbleEmote
+            src={getCompletionEmote(entry)}
+            animation={emoteAnimation as any}
+            size="2xl"
+            alt="Mobble celebrating"
+          />
+        </div>
+        <h2
+          className="text-2xl font-bold font-display"
+          style={{ color: 'var(--color-secondary)' }}
+        >
           {getCompletionMessage(settings.tone)}
         </h2>
       </div>
 
-      <div className="bg-white rounded-xl p-6 border-2 border-slate-200 space-y-4">
-        <div>
-          <span className="text-sm text-slate-500 uppercase tracking-wide">Status</span>
-          <p className="text-lg font-medium text-slate-800 mt-1">{getMoveLabel()}</p>
-        </div>
-
-        {entry.intensity && (
+      {/* Combined Entry Summary Card */}
+      <Card className="!p-5">
+        {/* Stats Grid */}
+        <div className="grid grid-cols-3 gap-4 text-center mb-4">
           <div>
-            <span className="text-sm text-slate-500 uppercase tracking-wide">Intensity</span>
-            <p className="text-lg font-medium text-slate-800 mt-1 capitalize">
-              {entry.intensity}
+            <span className="text-xs text-slate-500 uppercase tracking-wide">Moved</span>
+            <p
+              className="text-lg font-semibold mt-0.5"
+              style={{ color: 'var(--color-text-heading)' }}
+            >
+              {getMoveLabel()}
             </p>
           </div>
-        )}
 
-        {entry.feeling && (
           <div>
-            <span className="text-sm text-slate-500 uppercase tracking-wide">
-              How you feel
-            </span>
-            <p className="text-lg font-medium text-slate-800 mt-1 capitalize">
-              {entry.feeling}
+            <span className="text-xs text-slate-500 uppercase tracking-wide">Intensity</span>
+            <p
+              className="text-lg font-semibold mt-0.5 capitalize"
+              style={{ color: 'var(--color-text-heading)' }}
+            >
+              {entry.intensity || '—'}
             </p>
           </div>
-        )}
 
-        {entry.note && (
           <div>
-            <span className="text-sm text-slate-500 uppercase tracking-wide">Note</span>
-            <p className="text-lg text-slate-700 mt-1">{entry.note}</p>
-          </div>
-        )}
-      </div>
-
-      {/* Points Earned */}
-      <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-4 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <Coins className="w-6 h-6 text-yellow-600" />
-          <div>
-            <p className="text-sm text-yellow-800 font-medium">Points Earned Today</p>
-            <p className="text-xs text-yellow-600">Keep logging to earn more!</p>
+            <span className="text-xs text-slate-500 uppercase tracking-wide">Felt after</span>
+            <p
+              className="text-lg font-semibold mt-0.5 capitalize"
+              style={{ color: 'var(--color-text-heading)' }}
+            >
+              {entry.feeling || '—'}
+            </p>
           </div>
         </div>
-        <div className="text-2xl font-bold text-yellow-700">+{pointsEarned}</div>
-      </div>
 
+        {/* Divider */}
+        <div className="border-t border-slate-100 my-4" />
+
+        {/* Note Section */}
+        {displayNote ? (
+          <div className="mb-4">
+            <span className="text-xs text-slate-500 uppercase tracking-wide">Note</span>
+            <p className="text-slate-700 mt-1">{displayNote}</p>
+            {noteAdded && (
+              <p className="text-xs text-teal-600 mt-1 font-medium">+1 point earned!</p>
+            )}
+          </div>
+        ) : (
+          /* Add Note Prompt - inline in the card */
+          <div className="mb-4">
+            <div className="flex items-start gap-3 mb-3">
+              <MobbleEmote
+                emote="coy"
+                animation="breathing"
+                size="xs"
+                alt="Mobble asking"
+              />
+              <div>
+                <p
+                  className="text-sm font-medium"
+                  style={{ color: 'var(--color-text-heading)' }}
+                >
+                  Add a note?
+                </p>
+                <p className="text-xs text-slate-500">
+                  More details = better insights from Mobble
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <textarea
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="What did you do today?"
+                maxLength={200}
+                rows={2}
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:border-mobble-secondary focus:ring-2 focus:ring-mobble-light focus:outline-none resize-none transition-all text-sm"
+              />
+              <NoteSuggestions currentNote={note} onSuggestionClick={setNote} />
+
+              {note.trim() && (
+                <button
+                  onClick={handleAddNote}
+                  className="w-full py-2.5 text-white rounded-xl font-medium text-sm transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
+                  style={{
+                    background: 'linear-gradient(135deg, #4ECDC4 0%, #44A8B3 100%)',
+                  }}
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  <span>Add Note (+1 point)</span>
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Edit Button - inside the card */}
+        <button
+          onClick={onEdit}
+          className="w-full py-2.5 rounded-xl font-medium text-sm text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all flex items-center justify-center gap-2"
+        >
+          <Edit3 className="w-3.5 h-3.5" />
+          <span>Edit entry</span>
+        </button>
+      </Card>
+
+      {/* AI Response */}
       {entry.aiResponse && (
-        <div className="bg-gradient-to-br from-slate-100 to-slate-50 rounded-xl p-6 border border-slate-200">
-          <p className="text-lg text-slate-700 leading-relaxed">{entry.aiResponse}</p>
-        </div>
+        <Card className="!p-5">
+          <p className="text-slate-700 leading-relaxed">{entry.aiResponse}</p>
+        </Card>
       )}
-
-      <button
-        onClick={onEdit}
-        className="w-full py-3 px-6 bg-white border-2 border-slate-300 rounded-xl hover:bg-slate-50 transition-colors flex items-center justify-center space-x-2 text-slate-700 font-medium"
-      >
-        <Edit3 className="w-4 h-4" />
-        <span>Edit entry</span>
-      </button>
     </div>
   );
 };

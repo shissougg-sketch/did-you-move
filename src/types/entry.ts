@@ -1,3 +1,5 @@
+import type { AIInterpretation } from './aiInterpretation';
+
 export type DidMove = 'yes' | 'kind-of' | 'no';
 export type Intensity = 'easy' | 'moderate' | 'hard' | 'exhausting';
 export type Feeling = 'better' | 'same' | 'worse';
@@ -11,6 +13,7 @@ export interface DailyEntry {
   feeling: Feeling | null;
   note: string | null;
   aiResponse: string | null;
+  aiInterpretation: AIInterpretation | null; // AI analysis of the note
   source: EntrySource;
   createdAt: string;
   updatedAt: string;

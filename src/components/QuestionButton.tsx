@@ -13,7 +13,7 @@ export const QuestionButton = ({
 }: QuestionButtonProps) => {
   const getVariantClasses = () => {
     if (!selected) {
-      return 'bg-white border-2 border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50';
+      return 'bg-white border-2 border-slate-200 text-slate-700 hover:border-mobble-secondary hover:bg-mobble-light';
     }
 
     switch (variant) {
@@ -24,7 +24,7 @@ export const QuestionButton = ({
       case 'no':
         return 'bg-moved-no border-2 border-moved-no text-slate-700';
       default:
-        return 'bg-slate-800 border-2 border-slate-800 text-white';
+        return 'bg-mobble-secondary border-2 border-mobble-secondary text-white';
     }
   };
 
@@ -32,11 +32,12 @@ export const QuestionButton = ({
     <button
       onClick={onClick}
       className={`
-        w-full py-4 px-6 rounded-xl font-medium text-lg
+        w-full py-4 px-6 rounded-2xl font-medium text-lg
         transition-all duration-200 ease-out
-        focus:outline-none focus:ring-4 focus:ring-slate-300 focus:ring-offset-2
+        focus:outline-none focus:ring-4 focus:ring-mobble-light focus:ring-offset-2
         ${getVariantClasses()}
       `}
+      style={{ boxShadow: 'var(--shadow-card)' }}
     >
       {label}
     </button>

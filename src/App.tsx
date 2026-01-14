@@ -1,12 +1,15 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { OnboardingCheck } from './components/OnboardingCheck';
 import { Home } from './pages/Home';
 import { History } from './pages/History';
-import { Trends } from './pages/Trends';
+import { Insights } from './pages/Insights';
 import { Settings } from './pages/Settings';
 import { Store } from './pages/Store';
+import { Story } from './pages/Story';
 import { Splash } from './pages/Splash';
+import { ProfileSetup } from './components/ProfileSetup';
 
 function App() {
   return (
@@ -16,12 +19,24 @@ function App() {
           {/* Public route - Splash/Landing page */}
           <Route path="/splash" element={<Splash />} />
 
-          {/* Protected routes */}
+          {/* Profile setup route - protected but no onboarding check */}
+          <Route
+            path="/setup"
+            element={
+              <ProtectedRoute>
+                <ProfileSetup />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Protected routes with onboarding check */}
           <Route
             path="/"
             element={
               <ProtectedRoute>
-                <Home />
+                <OnboardingCheck>
+                  <Home />
+                </OnboardingCheck>
               </ProtectedRoute>
             }
           />
@@ -29,15 +44,19 @@ function App() {
             path="/history"
             element={
               <ProtectedRoute>
-                <History />
+                <OnboardingCheck>
+                  <History />
+                </OnboardingCheck>
               </ProtectedRoute>
             }
           />
           <Route
-            path="/trends"
+            path="/insights"
             element={
               <ProtectedRoute>
-                <Trends />
+                <OnboardingCheck>
+                  <Insights />
+                </OnboardingCheck>
               </ProtectedRoute>
             }
           />
@@ -45,7 +64,9 @@ function App() {
             path="/settings"
             element={
               <ProtectedRoute>
-                <Settings />
+                <OnboardingCheck>
+                  <Settings />
+                </OnboardingCheck>
               </ProtectedRoute>
             }
           />
@@ -53,7 +74,19 @@ function App() {
             path="/store"
             element={
               <ProtectedRoute>
-                <Store />
+                <OnboardingCheck>
+                  <Store />
+                </OnboardingCheck>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/story"
+            element={
+              <ProtectedRoute>
+                <OnboardingCheck>
+                  <Story />
+                </OnboardingCheck>
               </ProtectedRoute>
             }
           />

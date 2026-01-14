@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
+import { getMessaging, isSupported, type Messaging } from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDGZJsiHV7LVSygyDUE0xBcnjWjLfZXzsI",
@@ -16,3 +17,18 @@ const app = initializeApp(firebaseConfig);
 
 // Initialize Firebase Authentication
 export const auth = getAuth(app);
+
+// Initialize Firebase Cloud Messaging (only if supported)
+let messaging: Messaging | null = null;
+
+export const getFirebaseMessaging = async (): Promise<Messaging | null> => {
+  if (messaging) return messaging;
+
+  const supported = await isSupported();
+  if (supported) {
+    messaging = getMessaging(app);
+  }
+  return messaging;
+};
+
+export { app };

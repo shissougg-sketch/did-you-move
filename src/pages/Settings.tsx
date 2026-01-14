@@ -1,7 +1,13 @@
-import { Link } from 'react-router-dom';
-import { ArrowLeft, Download } from 'lucide-react';
+import { Download } from 'lucide-react';
 import { useSettingsStore } from '../stores/settingsStore';
 import { useEntryStore } from '../stores/entryStore';
+import { PageLayout } from '../components/PageLayout';
+import { NavHeader } from '../components/NavHeader';
+import { Card, PillButton } from '../components/ui';
+import { ReminderSettings } from '../components/ReminderSettings';
+import { ProfileSettings } from '../components/ProfileSettings';
+import { HealthKitSettings } from '../components/HealthKitSettings';
+import { CodeRedemption } from '../components/CodeRedemption';
 import type { Tone } from '../types/settings';
 
 export const Settings = () => {
@@ -14,7 +20,7 @@ export const Settings = () => {
     const url = URL.createObjectURL(dataBlob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `did-you-move-${new Date().toISOString().split('T')[0]}.json`;
+    link.download = `go-mobble-${new Date().toISOString().split('T')[0]}.json`;
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -39,129 +45,135 @@ export const Settings = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `did-you-move-${new Date().toISOString().split('T')[0]}.csv`;
+    link.download = `go-mobble-${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
     URL.revokeObjectURL(url);
   };
 
-  const tones: { value: Tone; label: string; description: string }[] = [
-    {
-      value: 'gentle',
-      label: 'Gentle',
-      description: 'Encouraging and warm. "Anything counts."',
-    },
-    {
-      value: 'neutral',
-      label: 'Neutral',
-      description: 'Clear and straightforward. "Did you move today?"',
-    },
-    {
-      value: 'direct',
-      label: 'Direct',
-      description: 'Brief and to the point. "Did you do anything physical?"',
-    },
+  const tones: { value: Tone; label: string }[] = [
+    { value: 'gentle', label: 'Gentle' },
+    { value: 'neutral', label: 'Neutral' },
+    { value: 'direct', label: 'Direct' },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <nav className="bg-white border-b border-slate-200">
-        <div className="page-container">
-          <div className="flex items-center space-x-4 py-4">
-            <Link
-              to="/"
-              className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </Link>
-            <h1 className="text-2xl font-bold text-slate-800">Settings</h1>
-          </div>
-        </div>
-      </nav>
+    <PageLayout>
+      <NavHeader title="Settings" titleImage="/headings/settings.png" showBack />
 
-      <main className="page-container py-8 space-y-6">
-        {/* Tone Selection */}
-        <div className="bg-white rounded-xl p-6 border-2 border-slate-200">
-          <h2 className="text-lg font-semibold text-slate-800 mb-4">Tone</h2>
-          <div className="space-y-3">
-            {tones.map((tone) => (
-              <button
-                key={tone.value}
-                onClick={() => updateTone(tone.value)}
-                className={`
-                  w-full p-4 rounded-lg border-2 text-left transition-all
-                  ${
-                    settings.tone === tone.value
-                      ? 'border-slate-800 bg-slate-50'
-                      : 'border-slate-200 hover:border-slate-300'
-                  }
-                `}
-              >
-                <div className="font-medium text-slate-800">{tone.label}</div>
-                <div className="text-sm text-slate-600 mt-1">{tone.description}</div>
-              </button>
-            ))}
-          </div>
-        </div>
+      <main className="page-container pt-2 pb-8 space-y-4">
+        {/* Profile */}
+        <ProfileSettings />
 
-        {/* Trends Toggle */}
-        <div className="bg-white rounded-xl p-6 border-2 border-slate-200">
-          <div className="flex items-center justify-between">
+        {/* Preferences Card */}
+        <Card>
+          <h2 className="caption mb-4">Preferences</h2>
+
+          {/* Tone Selection */}
+          <div className="mb-5">
+            <p className="text-sm text-slate-600 mb-3">Message Tone</p>
+            <div className="flex gap-2">
+              {tones.map((tone) => (
+                <button
+                  key={tone.value}
+                  onClick={() => updateTone(tone.value)}
+                  className={`
+                    flex-1 py-2.5 px-4 rounded-full text-sm font-medium transition-all duration-200
+                    ${
+                      settings.tone === tone.value
+                        ? 'bg-mobble-secondary text-white'
+                        : 'bg-slate-100 text-slate-600 hover:bg-mobble-light'
+                    }
+                  `}
+                >
+                  {tone.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Insights Toggle */}
+          <div className="flex items-center justify-between py-2">
             <div>
-              <h2 className="text-lg font-semibold text-slate-800">Show Trends</h2>
-              <p className="text-sm text-slate-600 mt-1">
-                Display insights about your movement patterns
+              <p
+                className="text-sm font-medium"
+                style={{ color: 'var(--color-text-heading)' }}
+              >
+                Show Insights
               </p>
+              <p className="text-xs text-slate-500">Movement patterns & trends</p>
             </div>
             <button
               onClick={toggleTrends}
               className={`
-                relative inline-flex h-6 w-11 items-center rounded-full transition-colors
-                ${settings.showTrends ? 'bg-slate-800' : 'bg-slate-300'}
+                relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-200
+                ${settings.showTrends ? 'bg-mobble-secondary' : 'bg-slate-200'}
               `}
             >
               <span
                 className={`
-                  inline-block h-4 w-4 transform rounded-full bg-white transition-transform
+                  inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-200
                   ${settings.showTrends ? 'translate-x-6' : 'translate-x-1'}
                 `}
               />
             </button>
           </div>
-        </div>
+        </Card>
 
-        {/* Export Data */}
-        <div className="bg-white rounded-xl p-6 border-2 border-slate-200">
-          <h2 className="text-lg font-semibold text-slate-800 mb-4">Export Data</h2>
-          <div className="space-y-3">
-            <button
+        {/* Reminders */}
+        <ReminderSettings />
+
+        {/* Health Integration */}
+        <HealthKitSettings />
+
+        {/* Code Redemption */}
+        <CodeRedemption />
+
+        {/* Export Card */}
+        <Card>
+          <h2 className="caption mb-4">Your Data</h2>
+          <div className="flex gap-3">
+            <PillButton
+              variant="primary"
               onClick={handleExportJSON}
               disabled={entries.length === 0}
-              className="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-slate-800 text-white rounded-lg hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              fullWidth
+              className="flex items-center justify-center gap-2"
             >
               <Download className="w-4 h-4" />
-              <span>Export as JSON</span>
-            </button>
-            <button
+              <span>JSON</span>
+            </PillButton>
+            <PillButton
+              variant="primary"
               onClick={handleExportCSV}
               disabled={entries.length === 0}
-              className="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-slate-800 text-white rounded-lg hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              fullWidth
+              className="flex items-center justify-center gap-2"
             >
               <Download className="w-4 h-4" />
-              <span>Export as CSV</span>
-            </button>
+              <span>CSV</span>
+            </PillButton>
           </div>
-        </div>
+          {entries.length === 0 && (
+            <p className="text-xs text-slate-400 text-center mt-3">
+              No entries to export yet
+            </p>
+          )}
+        </Card>
 
-        {/* About */}
-        <div className="bg-slate-100 rounded-xl p-6 border border-slate-200">
-          <h2 className="text-lg font-semibold text-slate-800 mb-3">Philosophy</h2>
-          <div className="text-slate-700 space-y-2">
-            <p>This app is for people who work out inconsistently and get overwhelmed by data.</p>
-            <p className="font-medium">No calories. No macros. No streak shame. No social feed.</p>
-            <p>Just awareness, consistency, and honesty.</p>
-          </div>
-        </div>
+        {/* Philosophy Footer */}
+        <Card variant="ghost">
+          <p className="text-sm text-slate-500 text-center leading-relaxed">
+            <span
+              className="font-medium"
+              style={{ color: 'var(--color-text-heading)' }}
+            >
+              No calories. No macros. No streak shame.
+            </span>
+            <br />
+            Just awareness, consistency, and honesty.
+          </p>
+        </Card>
       </main>
-    </div>
+    </PageLayout>
   );
 };
