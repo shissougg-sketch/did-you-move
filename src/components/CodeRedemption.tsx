@@ -9,7 +9,7 @@ export const CodeRedemption = () => {
   const [code, setCode] = useState('');
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { redeemCode, hasRedeemedCode } = useSettingsStore();
+  const { redeemCode } = useSettingsStore();
   const { createEntryForDate, getEntryByDate } = useEntryStore();
 
   const generateRandomEntries = () => {
@@ -71,24 +71,9 @@ export const CodeRedemption = () => {
 
     const normalizedCode = code.trim().toLowerCase();
 
-    // Handle special "30days" code
+    // Handle special "30days" code (always redeemable)
     if (normalizedCode === '30days') {
-      if (hasRedeemedCode('30days')) {
-        setResult({ success: false, message: 'You have already redeemed this code!' });
-        setIsLoading(false);
-        return;
-      }
-
       const entriesCreated = generateRandomEntries();
-
-      // Mark code as redeemed
-      const settings = useSettingsStore.getState().settings;
-      useSettingsStore.setState({
-        settings: {
-          ...settings,
-          redeemedCodes: [...settings.redeemedCodes, '30days'],
-        },
-      });
 
       setResult({
         success: true,

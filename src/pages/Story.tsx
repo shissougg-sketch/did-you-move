@@ -4,7 +4,7 @@ import { PageLayout } from '../components/PageLayout';
 import { NavHeader } from '../components/NavHeader';
 import { MobbleJourney } from '../components/MobbleJourney';
 import { MobbleEmote } from '../components/MobbleEmote';
-import { SidePathsSection, CompletedArcsSection } from '../components/StoryScene';
+import { SidePathsSection, CompletedArcsSection, PremiumStoryPacksSection } from '../components/StoryScene';
 import { Card, PillButton } from '../components/ui';
 
 export const Story = () => {
@@ -97,6 +97,9 @@ export const Story = () => {
 
         {/* Side Paths */}
         <SidePathsSection />
+
+        {/* Premium Story Packs */}
+        <PremiumStoryPacksSection />
 
         {/* Completed Arcs */}
         <CompletedArcsSection />

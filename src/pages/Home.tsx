@@ -58,6 +58,19 @@ export const Home = () => {
           />
 
           <div className="flex items-center gap-2">
+            {/* Pro Subscribe Button */}
+            <button
+              onClick={() => setShowSubscribeModal(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all hover:scale-105"
+              style={{
+                background: 'linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%)',
+                boxShadow: '0 2px 8px rgba(139, 92, 246, 0.3)',
+              }}
+            >
+              <Crown className="w-4 h-4 text-white" />
+              <span className="font-semibold text-sm text-white">Pro</span>
+            </button>
+
             {/* Points Badge */}
             <Link
               to="/store"
@@ -75,19 +88,6 @@ export const Home = () => {
                 {availablePoints}
               </span>
             </Link>
-
-            {/* Pro Subscribe Button */}
-            <button
-              onClick={() => setShowSubscribeModal(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all hover:scale-105"
-              style={{
-                background: 'linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%)',
-                boxShadow: '0 2px 8px rgba(139, 92, 246, 0.3)',
-              }}
-            >
-              <Crown className="w-4 h-4 text-white" />
-              <span className="font-semibold text-sm text-white">Pro</span>
-            </button>
 
             {/* Logout */}
             <button

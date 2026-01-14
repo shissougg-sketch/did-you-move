@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { useStoryStore } from '../stores/storyStore';
 import { useSettingsStore } from '../stores/settingsStore';
 import { STORY_ARCS, SIDE_PATHS, type StoryScene as StorySceneType, type SidePath } from '../types/story';
+import { PREMIUM_STORY_PACKS } from '../types/storyPacks';
 import { MobbleEmote } from './MobbleEmote';
-import { Lock, Unlock, Coins, Gift, ChevronRight, Check, X } from 'lucide-react';
+import { ProBadge, UpgradeModal } from './UpgradeModal';
+import { Lock, Unlock, Coins, Gift, ChevronRight, Check, X, BookOpen } from 'lucide-react';
 
 interface SidePathCardProps {
   sidePath: SidePath;
@@ -361,6 +363,100 @@ export const CompletedArcsSection = () => {
           onClose={() => setViewingArc(null)}
         />
       )}
+    </>
+  );
+};
+
+export const PremiumStoryPacksSection = () => {
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [selectedPack, setSelectedPack] = useState<string | null>(null);
+
+  const handlePackClick = (packName: string) => {
+    setSelectedPack(packName);
+    setShowUpgradeModal(true);
+  };
+
+  // Only show if there are premium packs
+  if (PREMIUM_STORY_PACKS.length === 0) {
+    return null;
+  }
+
+  return (
+    <>
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">
+            Premium Story Packs
+          </h3>
+          <ProBadge />
+        </div>
+
+        <p className="text-sm text-slate-500">
+          Additional journeys coming soon. Subscribe to unlock them all.
+        </p>
+
+        <div className="space-y-3">
+          {PREMIUM_STORY_PACKS.map((pack) => (
+            <button
+              key={pack.id}
+              onClick={() => handlePackClick(pack.name)}
+              className="w-full rounded-2xl p-4 border text-left transition-all hover:scale-[1.01] opacity-75"
+              style={{
+                background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(99, 102, 241, 0.05) 100%)',
+                borderColor: 'rgba(139, 92, 246, 0.2)',
+                boxShadow: '0 10px 40px rgba(139, 92, 246, 0.08)',
+              }}
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-2">
+                    <Lock className="w-4 h-4 text-purple-400" />
+                    <h4 className="font-semibold text-slate-800">{pack.name}</h4>
+                    {pack.isComingSoon && (
+                      <span className="text-xs px-2 py-0.5 bg-purple-100 text-purple-600 rounded-full">
+                        Coming Soon
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm text-slate-500 mt-1">{pack.description}</p>
+
+                  {/* Pack info */}
+                  <div className="flex items-center gap-4 mt-3">
+                    <div className="flex items-center space-x-1 text-xs text-slate-500">
+                      <BookOpen className="w-3 h-3" />
+                      <span>{pack.totalScenes} scenes</span>
+                    </div>
+                    {pack.rewards.cosmetics.length > 0 && (
+                      <div className="flex items-center space-x-1 text-xs text-slate-500">
+                        <Gift className="w-3 h-3" />
+                        <span>{pack.rewards.cosmetics.length} cosmetic rewards</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Price */}
+                <div className="ml-4 flex flex-col items-end">
+                  <span className="font-semibold text-purple-600">
+                    ${pack.price.toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Upgrade Modal */}
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => {
+          setShowUpgradeModal(false);
+          setSelectedPack(null);
+        }}
+        context="story"
+        itemName={selectedPack || undefined}
+      />
     </>
   );
 };

@@ -3,6 +3,12 @@ import { DEFAULT_PROFILE } from './profile';
 
 export type Tone = 'gentle' | 'neutral' | 'direct';
 
+/**
+ * Note: Subscription data is managed separately in subscriptionStore.ts
+ * This keeps concerns separated and allows subscription state to be
+ * synced with payment providers independently.
+ */
+
 export interface ReminderPreferences {
   enabled: boolean;
   time: string; // "18:00" format (24-hour)

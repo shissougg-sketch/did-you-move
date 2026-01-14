@@ -71,6 +71,9 @@ export const Insights = () => {
         ) : (
           <div className="space-y-4">
             {/* Stats Grid */}
+            <p className="text-sm text-slate-500 text-center">
+              Tap any card for a detailed summary
+            </p>
             <div className="grid grid-cols-2 gap-3">
               <InsightCard
                 icon={Activity}
