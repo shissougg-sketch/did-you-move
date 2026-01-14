@@ -5,3 +5,4 @@ export { PillButton } from './PillButton';
 export { Badge } from './Badge';
 export { IconButton } from './IconButton';
 export { BottomNav } from './BottomNav';
+export { Modal } from './Modal';

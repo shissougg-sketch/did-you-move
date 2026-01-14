@@ -5,6 +5,10 @@ importScripts('https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js'
 importScripts('https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging-compat.js');
 
 // Initialize Firebase in the service worker
+// Note: Service workers can't use import.meta.env, so we receive config via postMessage
+// from the main app or use a build-time injection. For now, these are public Firebase
+// config values (not secrets - they're meant to be client-side identifiers).
+// The actual security comes from Firebase Security Rules, not hiding these values.
 firebase.initializeApp({
   apiKey: "AIzaSyDGZJsiHV7LVSygyDUE0xBcnjWjLfZXzsI",
   authDomain: "mobble-5c274.firebaseapp.com",

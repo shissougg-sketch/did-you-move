@@ -12,7 +12,8 @@ export const AIResponse = ({ response, isLoading = false }: AIResponseProps) => 
   useEffect(() => {
     if (!isLoading && response) {
       // Gentle fade-in animation
-      setTimeout(() => setIsVisible(true), 100);
+      const timer = setTimeout(() => setIsVisible(true), 100);
+      return () => clearTimeout(timer);
     }
   }, [isLoading, response]);
 

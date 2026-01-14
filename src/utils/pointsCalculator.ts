@@ -1,3 +1,16 @@
+import { NOTE_THRESHOLDS, NOTE_POINTS } from './constants';
+
+const BASE_ENTRY_POINTS = 10;
+
+/**
+ * Calculate note bonus points based on note length
+ */
+const calculateNoteBonus = (noteLength: number): number => {
+  if (noteLength >= NOTE_THRESHOLDS.DETAILED) return NOTE_POINTS.DETAILED;
+  if (noteLength >= NOTE_THRESHOLDS.MEDIUM) return NOTE_POINTS.MEDIUM;
+  return NOTE_POINTS.BRIEF;
+};
+
 export const calculatePointsForEntry = (
   note: string | null,
   isBackdated: boolean = false
@@ -8,25 +21,15 @@ export const calculatePointsForEntry = (
       return 0;
     }
     // Award note bonus only for backdated entries
-    const noteLength = note.trim().length;
-    if (noteLength >= 101) return 3;
-    if (noteLength >= 51) return 2;
-    return 1;
+    return calculateNoteBonus(note.trim().length);
   }
 
   // Same-day entries get base points + note bonus
-  let points = 10; // Base reward
+  let points = BASE_ENTRY_POINTS;
 
   // Note bonus calculation
   if (note && note.trim().length > 0) {
-    const noteLength = note.trim().length;
-    if (noteLength >= 101) {
-      points += 3; // Detailed note
-    } else if (noteLength >= 51) {
-      points += 2; // Medium note
-    } else {
-      points += 1; // Short note
-    }
+    points += calculateNoteBonus(note.trim().length);
   }
 
   return points;

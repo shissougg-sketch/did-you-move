@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Coins, LogOut, X, Crown, Check } from 'lucide-react';
+import { Coins, LogOut, Crown, Check } from 'lucide-react';
 import { TodayForm } from '../components/TodayForm';
 import { CompletedState } from '../components/CompletedState';
 import { PageLayout } from '../components/PageLayout';
 import { MobbleJourney } from '../components/MobbleJourney';
 import { MobbleEmote } from '../components/MobbleEmote';
+import { Modal } from '../components/ui';
 import { useEntryStore } from '../stores/entryStore';
 import { useSettingsStore } from '../stores/settingsStore';
 import { useStoryStore } from '../stores/storyStore';
@@ -93,6 +94,7 @@ export const Home = () => {
             <button
               onClick={() => setShowLogoutConfirm(true)}
               className="p-2 rounded-xl text-slate-400 hover:bg-red-50 hover:text-red-500 transition-all duration-200"
+              aria-label="Log out"
               title="Log out"
             >
               <LogOut className="w-5 h-5" />
@@ -121,145 +123,119 @@ export const Home = () => {
       </main>
 
       {/* Logout Confirmation Modal */}
-      {showLogoutConfirm && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div
-            className="bg-white rounded-3xl max-w-sm w-full p-6 border border-slate-100 animate-in fade-in zoom-in-95 duration-200"
-            style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.15)' }}
+      <Modal
+        isOpen={showLogoutConfirm}
+        onClose={() => setShowLogoutConfirm(false)}
+        ariaLabel="Logout confirmation"
+      >
+        <div className="text-center -mt-2">
+          <MobbleEmote
+            emote="coy"
+            animation="breathing"
+            size="xl"
+            alt="Mobble saying goodbye"
+          />
+
+          <h3
+            className="text-xl font-semibold mt-4"
+            style={{ color: 'var(--color-text-heading)' }}
           >
-            <div className="flex justify-end">
-              <button
-                onClick={() => setShowLogoutConfirm(false)}
-                className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-all"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+            Sure you want to log out?
+          </h3>
 
-            <div className="text-center -mt-2">
-              <MobbleEmote
-                emote="coy"
-                animation="breathing"
-                size="xl"
-                alt="Mobble saying goodbye"
-              />
+          <p className="text-slate-500 text-sm mt-2">
+            You can always come back later.
+          </p>
 
-              <h3
-                className="text-xl font-semibold mt-4"
-                style={{ color: 'var(--color-text-heading)' }}
-              >
-                Sure you want to log out?
-              </h3>
-
-              <p className="text-slate-500 text-sm mt-2">
-                You can always come back later.
-              </p>
-
-              <div className="flex gap-3 mt-6">
-                <button
-                  onClick={() => setShowLogoutConfirm(false)}
-                  className="flex-1 py-3 px-4 rounded-xl font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="flex-1 py-3 px-4 rounded-xl font-medium text-white bg-red-500 hover:bg-red-600 transition-all"
-                >
-                  Log out
-                </button>
-              </div>
-            </div>
+          <div className="flex gap-3 mt-6">
+            <button
+              onClick={() => setShowLogoutConfirm(false)}
+              className="flex-1 py-3 px-4 rounded-xl font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleLogout}
+              className="flex-1 py-3 px-4 rounded-xl font-medium text-white bg-red-500 hover:bg-red-600 transition-all"
+            >
+              Log out
+            </button>
           </div>
         </div>
-      )}
+      </Modal>
 
       {/* Subscription Modal */}
-      {showSubscribeModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <Modal
+        isOpen={showSubscribeModal}
+        onClose={() => setShowSubscribeModal(false)}
+        ariaLabel="Subscribe to Go Mobble Pro"
+      >
+        <div className="text-center -mt-2">
+          {/* Pro Badge */}
           <div
-            className="bg-white rounded-3xl max-w-sm w-full p-6 border border-slate-100 animate-in fade-in zoom-in-95 duration-200"
-            style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.15)' }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4"
+            style={{
+              background: 'linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%)',
+              boxShadow: '0 4px 12px rgba(139, 92, 246, 0.3)',
+            }}
           >
-            {/* Close Button */}
-            <div className="flex justify-end">
-              <button
-                onClick={() => setShowSubscribeModal(false)}
-                className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-all"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Content */}
-            <div className="text-center -mt-2">
-              {/* Pro Badge */}
-              <div
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4"
-                style={{
-                  background: 'linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%)',
-                  boxShadow: '0 4px 12px rgba(139, 92, 246, 0.3)',
-                }}
-              >
-                <Crown className="w-5 h-5 text-white" />
-                <span className="font-bold text-white">Go Mobble Pro</span>
-              </div>
-
-              {/* Price */}
-              <div className="mb-6">
-                <span
-                  className="text-4xl font-bold font-display"
-                  style={{ color: 'var(--color-text-heading)' }}
-                >
-                  $4.99
-                </span>
-                <span className="text-slate-500 text-lg">/mo</span>
-              </div>
-
-              {/* Benefits List */}
-              <div className="text-left space-y-3 mb-6">
-                {[
-                  'Exclusive premium cosmetics',
-                  'Ad-free experience',
-                  'Priority support',
-                  'Early access to new features',
-                  'Support app development',
-                ].map((benefit) => (
-                  <div key={benefit} className="flex items-center gap-3">
-                    <div
-                      className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
-                      style={{ backgroundColor: 'rgba(139, 92, 246, 0.15)' }}
-                    >
-                      <Check className="w-3 h-3 text-purple-600" />
-                    </div>
-                    <span className="text-slate-700">{benefit}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Subscribe Button */}
-              <button
-                className="w-full py-4 rounded-2xl font-semibold text-white transition-all hover:scale-[1.02]"
-                style={{
-                  background: 'linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%)',
-                  boxShadow: '0 4px 16px rgba(139, 92, 246, 0.4)',
-                }}
-                onClick={() => {
-                  // TODO: Implement subscription
-                  alert('Subscription coming soon!');
-                }}
-              >
-                Subscribe Now
-              </button>
-
-              {/* Cancel Note */}
-              <p className="text-slate-400 text-sm mt-4">
-                Cancel anytime. No commitments.
-              </p>
-            </div>
+            <Crown className="w-5 h-5 text-white" />
+            <span className="font-bold text-white">Go Mobble Pro</span>
           </div>
+
+          {/* Price */}
+          <div className="mb-6">
+            <span
+              className="text-4xl font-bold font-display"
+              style={{ color: 'var(--color-text-heading)' }}
+            >
+              $4.99
+            </span>
+            <span className="text-slate-500 text-lg">/mo</span>
+          </div>
+
+          {/* Benefits List */}
+          <div className="text-left space-y-3 mb-6">
+            {[
+              'Exclusive premium cosmetics',
+              'Ad-free experience',
+              'Priority support',
+              'Early access to new features',
+              'Support app development',
+            ].map((benefit) => (
+              <div key={benefit} className="flex items-center gap-3">
+                <div
+                  className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
+                  style={{ backgroundColor: 'rgba(139, 92, 246, 0.15)' }}
+                >
+                  <Check className="w-3 h-3 text-purple-600" />
+                </div>
+                <span className="text-slate-700">{benefit}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Subscribe Button */}
+          <button
+            className="w-full py-4 rounded-2xl font-semibold text-white transition-all hover:scale-[1.02]"
+            style={{
+              background: 'linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%)',
+              boxShadow: '0 4px 16px rgba(139, 92, 246, 0.4)',
+            }}
+            onClick={() => {
+              // TODO: Implement subscription
+              alert('Subscription coming soon!');
+            }}
+          >
+            Subscribe Now
+          </button>
+
+          {/* Cancel Note */}
+          <p className="text-slate-400 text-sm mt-4">
+            Cancel anytime. No commitments.
+          </p>
         </div>
-      )}
+      </Modal>
     </PageLayout>
   );
 };

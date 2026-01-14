@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { isToday } from 'date-fns';
 import { formatDayOfWeek, formatDayNumber } from '../utils/dateHelpers';
 import type { DailyEntry, DidMove } from '../types/entry';
@@ -21,13 +22,13 @@ const getEntryDotColor = (didMove: DidMove) => {
   }
 };
 
-export const DayCell = ({
+export const DayCell = memo(function DayCell({
   date,
   isSelected,
   entry,
   onSelect,
   disabled = false,
-}: DayCellProps) => {
+}: DayCellProps) {
   const today = isToday(date);
 
   const baseClasses = 'flex flex-col items-center py-2 px-3 rounded-xl transition-all';
@@ -60,4 +61,4 @@ export const DayCell = ({
       )}
     </button>
   );
-};
+});

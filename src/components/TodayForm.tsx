@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { QuestionButton } from './QuestionButton';
 import { AIResponse } from './AIResponse';
 import { NoteSuggestions } from './NoteSuggestions';
@@ -39,11 +39,25 @@ export const TodayForm = () => {
   const [isExiting, setIsExiting] = useState(false);
   const [currentPrompt, setCurrentPrompt] = useState<PromptDefinition | null>(null);
   const [submittedNote, setSubmittedNote] = useState<string | null>(null);
+  const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Helper function to transition between questions
   const transitionToNextQuestion = (nextQuestion: QuestionStep) => {
     setIsExiting(true);
-    setTimeout(() => {
+    // Clear any existing timeout
+    if (transitionTimeoutRef.current) {
+      clearTimeout(transitionTimeoutRef.current);
+    }
+    transitionTimeoutRef.current = setTimeout(() => {
       setActiveQuestion(nextQuestion);
       setIsExiting(false);
     }, 300); // Match animation duration

@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 interface QuestionButtonProps {
   label: string;
   selected: boolean;
@@ -5,12 +7,12 @@ interface QuestionButtonProps {
   variant?: 'yes' | 'kind-of' | 'no' | 'default';
 }
 
-export const QuestionButton = ({
+export const QuestionButton = memo(function QuestionButton({
   label,
   selected,
   onClick,
   variant = 'default',
-}: QuestionButtonProps) => {
+}: QuestionButtonProps) {
   const getVariantClasses = () => {
     if (!selected) {
       return 'bg-white border-2 border-slate-200 text-slate-700 hover:border-mobble-secondary hover:bg-mobble-light';
@@ -42,4 +44,4 @@ export const QuestionButton = ({
       {label}
     </button>
   );
-};
+});

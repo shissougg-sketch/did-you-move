@@ -1,4 +1,5 @@
 import { format, parseISO, isToday, differenceInDays, subDays, addDays, startOfDay, isBefore, isAfter } from 'date-fns';
+import { CALENDAR } from './constants';
 
 export const formatDate = (dateString: string): string => {
   try {
@@ -52,9 +53,9 @@ export const getCalendarDays = (centerDate: Date, daysToShow: number = 7): Date[
 export const canCreateBackdatedEntry = (dateString: string): boolean => {
   const date = parseISO(dateString);
   const today = startOfDay(new Date());
-  const sevenDaysAgo = subDays(today, 7);
+  const backdateLimit = subDays(today, CALENDAR.DAYS_TO_SHOW);
 
-  return !isBefore(date, sevenDaysAgo) && !isAfter(date, today);
+  return !isBefore(date, backdateLimit) && !isAfter(date, today);
 };
 
 export const isBackdatedDate = (dateString: string): boolean => {
