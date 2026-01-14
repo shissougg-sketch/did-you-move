@@ -2,14 +2,16 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getMessaging, isSupported, type Messaging } from 'firebase/messaging';
 
+// Firebase client config - these are public identifiers, not secrets.
+// Security is enforced by Firebase Security Rules, not by hiding these values.
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+  apiKey: "AIzaSyDGZJsiHV7LVSygyDUE0xBcnjWjLfZXzsI",
+  authDomain: "mobble-5c274.firebaseapp.com",
+  projectId: "mobble-5c274",
+  storageBucket: "mobble-5c274.firebasestorage.app",
+  messagingSenderId: "548780301916",
+  appId: "1:548780301916:web:de98a3bd1017e79556d099",
+  measurementId: "G-65KPSSJNG0",
 };
 
 // Initialize Firebase
